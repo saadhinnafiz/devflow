@@ -28,5 +28,10 @@
   "files.associations": {
     "*.css": "tailwindcss"
   },
-  "tailwindCSS.validate": false
+  "tailwindCSS.validate": false,
+  "files.exclude": {
+    "**/.next": true,
+    "**/.node_modules": true,
+    "**/.next-env.d.ts": true
+  }
 }
