@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import Theme from "./Theme";
 
 export default function Navbar() {
   return (
@@ -13,7 +14,9 @@ export default function Navbar() {
         </Link>
         <p>Global Search</p>
 
-        <div className="flex-between gap-5">Theme</div>
+        <div className="flex-between gap-5">
+          <Theme />
+        </div>
       </nav>
     </>
   );
