@@ -14,7 +14,6 @@ export default function SocialAuthForm() {
     try {
       await signIn(provider, {
         callbackUrl: ROUTES.HOME,
-        redirect: false,
       });
     } catch (error) {
       console.log(error);
