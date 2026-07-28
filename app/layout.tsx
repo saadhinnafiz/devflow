@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/toast";
 
 const inter = localFont({
   src: "../public/fonts/InterVF.ttf",
@@ -38,6 +39,7 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col font-sans">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <Toaster />
           {children}
         </ThemeProvider>
       </body>
