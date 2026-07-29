@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ROUTES from "@/constants/routes";
+
 interface AuthFormProps<T extends FieldValues> {
   schema: ZodType<T>;
   defaultValues: T;
@@ -24,7 +25,9 @@ const AuthForm = <T extends FieldValues>({ schema, defaultValues, formType, onSu
 
   // 2. Define a submit handler
 
-  const handleSubmit: SubmitHandler<T> = async () => {};
+  const handleSubmit: SubmitHandler<T> = async () => {
+    // TODO: Authenticate User
+  };
 
   // 3. Button text
 
