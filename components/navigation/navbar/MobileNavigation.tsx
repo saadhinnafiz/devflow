@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sheet";
 import ROUTES from "@/constants/routes";
 import { Button } from "@/components/ui/button";
+import NavigationLinks from "./NavigationLinks";
 
 export default function MobileNavigation() {
   return (
@@ -39,7 +40,7 @@ export default function MobileNavigation() {
             nativeButton={false}
             render={
               <section className="flex h-full flex-col gap-6 pt-16">
-                <p>Nav Links</p>
+                <NavigationLinks isMobileNav />
               </section>
             }
           />
