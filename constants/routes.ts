@@ -4,6 +4,7 @@ const ROUTES = {
   SIGN_UP: "/sign-up",
   SIGN_OUT: "/sign-out",
   PROFILE: (id: string) => `/profile/${id}`,
+  TAGS: (id: string) => `/tags/${id}`,
 };
 
 export default ROUTES;

@@ -41,6 +41,13 @@ export default async function RootLayout({
       className={cn("h-full", "antialiased", spaceGrotesk.variable, "font-sans", inter.variable)}
       suppressHydrationWarning
     >
+      <head>
+        <link
+          rel="stylesheet"
+          type="text/css"
+          href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
+        />
+      </head>
       <SessionProvider session={session}>
         <body className="flex min-h-full flex-col font-sans">
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
