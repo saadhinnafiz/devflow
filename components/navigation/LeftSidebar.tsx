@@ -27,7 +27,14 @@ export default async function LeftSidebar() {
               type="submit"
               className="small-medium btn-secondary min-h-[48px] w-full rounded-lg px-4 py-3 shadow-none"
             >
-              <span className="primary-text-gradient">Log Out</span>
+              <Image
+                src="/icons/logout.png"
+                alt="Logout Icon"
+                width={20}
+                height={20}
+                className="lg:hidden dark:invert"
+              />
+              <span className="primary-text-gradient max-lg:hidden">Log Out</span>
             </Button>
           </form>
         </div>
