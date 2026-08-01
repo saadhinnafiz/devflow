@@ -49,3 +49,5 @@ export default function RightSidebar() {
     </section>
   );
 }
+
+// TODO: change login sign up button based on user auth state if signed in or not

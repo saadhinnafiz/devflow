@@ -1,21 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  //   SheetDescription,
-  //   SheetFooter,
-  //   SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import ROUTES from "@/constants/routes";
 import { Button } from "@/components/ui/button";
 import NavigationLinks from "./NavigationLinks";
+import { auth, signOut } from "@/auth";
 
-export default function MobileNavigation() {
+export default async function MobileNavigation() {
+  const session = await auth();
+  const userId = session?.user?.id;
+
   return (
     <Sheet>
       <SheetTrigger
@@ -28,7 +23,6 @@ export default function MobileNavigation() {
         <SheetTitle className="hidden">Navigation</SheetTitle>
         <Link href="/" className="flex items-center gap-1 px-6 py-6">
           <Image src="/images/site-logo.svg" width={23} height={23} alt="DevFlow Logo" />
-
           <p className="h2-bold font-space-grotesk text-dark-100 dark:text-light-900">
             Dev<span className="text-primary-500">Flow</span>
           </p>
@@ -46,26 +40,44 @@ export default function MobileNavigation() {
           />
 
           <div className="flex flex-col gap-3 px-6 pb-6">
-            <SheetClose
-              nativeButton={false}
-              render={
-                <Link href={ROUTES.SIGN_IN}>
-                  <Button className="small-medium btn-secondary min-h-[48px] w-full rounded-lg px-4 py-3 shadow-none">
-                    <span className="primary-text-gradient">Log In</span>
-                  </Button>
-                </Link>
-              }
-            />
-            <SheetClose
-              nativeButton={false}
-              render={
-                <Link href={ROUTES.SIGN_UP}>
-                  <Button className="small-medium light-border-2 btn-tertiary text-dark400_light900 min-h-[48px] w-full rounded-lg border px-4 py-3 shadow-none">
-                    Sign Up
-                  </Button>
-                </Link>
-              }
-            />
+            {userId ? (
+              <form
+                action={async () => {
+                  "use server";
+                  await signOut({ redirectTo: ROUTES.SIGN_IN });
+                }}
+              >
+                <Button
+                  type="submit"
+                  className="small-medium btn-secondary min-h-[48px] w-full rounded-lg px-4 py-3 shadow-none"
+                >
+                  <span className="primary-text-gradient">Log Out</span>
+                </Button>
+              </form>
+            ) : (
+              <>
+                <SheetClose
+                  nativeButton={false}
+                  render={
+                    <Link href={ROUTES.SIGN_IN}>
+                      <Button className="small-medium btn-secondary min-h-[48px] w-full rounded-lg px-4 py-3 shadow-none">
+                        <span className="primary-text-gradient">Log In</span>
+                      </Button>
+                    </Link>
+                  }
+                />
+                <SheetClose
+                  nativeButton={false}
+                  render={
+                    <Link href={ROUTES.SIGN_UP}>
+                      <Button className="small-medium light-border-2 btn-tertiary text-dark400_light900 min-h-[48px] w-full rounded-lg border px-4 py-3 shadow-none">
+                        Sign Up
+                      </Button>
+                    </Link>
+                  }
+                />
+              </>
+            )}
           </div>
         </div>
       </SheetContent>
