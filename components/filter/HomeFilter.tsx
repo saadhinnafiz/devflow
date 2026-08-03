@@ -2,28 +2,44 @@
 
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { formUrlQuery, removeKeysFromQuery } from "@/lib/url";
 
 const filters = [
-  { name: "newest", value: "newest" },
-  { name: "popular", value: "popular" },
-  { name: "unanswered", value: "unanswered" },
-  { name: "recommended", value: "recommended" },
+  { name: "React", value: "react" },
+  { name: "TypeScript", value: "typescript" },
+  //   { name: "newest", value: "newest" },
+  //   { name: "popular", value: "popular" },
+  //   { name: "unanswered", value: "unanswered" },
+  //   { name: "recommended", value: "recommended" },
 ];
 
 export default function HomeFilter() {
   const searchParams = useSearchParams();
   const filterParams = searchParams.get("filter");
+  const router = useRouter();
 
   const [activeFilter, setActiveFilter] = useState(filterParams || "");
 
   const handleTypeClick = (filter: string) => {
-    if (filter) {
-      setActiveFilter(filter);
-    } else {
+    let newUrl = "";
+    if (filter === activeFilter) {
       setActiveFilter("");
+      newUrl = removeKeysFromQuery({
+        params: searchParams.toString(),
+        keysToRemove: ["filter"],
+      });
+    } else {
+      setActiveFilter(filter);
+      newUrl = formUrlQuery({
+        params: searchParams.toString(),
+        key: "filter",
+        value: filter.toLowerCase(),
+      });
     }
+
+    router.push(newUrl, { scroll: false });
   };
 
   return (

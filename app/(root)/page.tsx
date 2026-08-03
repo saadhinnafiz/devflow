@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
 import Link from "next/link";
 
+// TODO: temporary hardcoded data — replace with a real database/API call
+// (this filtering logic will move server-side into an actual query,
+// e.g. WHERE title ILIKE '%query%' AND tags @> ARRAY['filter'])
 const questions = [
   {
     _id: "1",
@@ -51,8 +54,19 @@ interface SearchParams {
 }
 
 export default async function Home({ searchParams }: SearchParams) {
-  const { query = "" } = await searchParams;
-  const filteredQuestions = questions.filter((question) => question.title.toLowerCase().includes(query?.toLowerCase()));
+  const { query = "", filter = "" } = await searchParams;
+  const normalizedQuery = query.toLowerCase();
+  const normalizedFilter = filter.toLowerCase();
+
+  // TODO: replace this in-memory filtering with a real database query
+  // once questions are fetched from an actual backend
+  const filteredQuestions = questions.filter((question) => {
+    const matchesQuery = question.title.toLowerCase().includes(normalizedQuery);
+    const matchesFilter = !normalizedFilter || question.tags.some((tag) => tag.name.toLowerCase() === normalizedFilter);
+
+    return matchesQuery && matchesFilter;
+  });
+
   return (
     <>
       <section className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
