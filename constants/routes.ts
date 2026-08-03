@@ -5,6 +5,7 @@ const ROUTES = {
   SIGN_OUT: "/sign-out",
   ASK_QUESTION: "/ask-question",
   PROFILE: (id: string) => `/profile/${id}`,
+  QUESTION: (id: string) => `/question/${id}`,
   TAGS: (id: string) => `/tags/${id}`,
 };
 

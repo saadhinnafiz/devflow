@@ -20,7 +20,7 @@ const questions = [
     upvotes: 10,
     answers: 5,
     views: 100,
-    createdAt: new Date(),
+    createdAt: new Date("2026-08-02T10:00:00Z"),
   },
   {
     _id: "2",
@@ -33,7 +33,7 @@ const questions = [
     upvotes: 8,
     answers: 3,
     views: 50,
-    createdAt: new Date(),
+    createdAt: new Date("2025-06-01T10:00:00Z"),
   },
   {
     _id: "3",
@@ -46,7 +46,7 @@ const questions = [
     upvotes: 5,
     answers: 2,
     views: 30,
-    createdAt: new Date(),
+    createdAt: new Date("2024-06-01T10:00:00Z"),
   },
 ];
 
