@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 
 export default function QuestionForm() {
+  // Set up the form: validated against AskQuestionSchema, starting with empty fields
   const form = useForm<z.infer<typeof AskQuestionSchema>>({
     resolver: standardSchemaResolver(AskQuestionSchema),
     defaultValues: {
@@ -18,11 +19,14 @@ export default function QuestionForm() {
     },
   });
 
+  // Runs only after validation passes — for now, just logs the result
   const handleCreateQuestion = (data: z.infer<typeof AskQuestionSchema>) => {
     console.log(data);
   };
+
   return (
     <form onSubmit={form.handleSubmit(handleCreateQuestion)} className="flex w-full flex-col gap-10">
+      {/* TITLE FIELD */}
       <Controller
         control={form.control}
         name="title"
@@ -32,6 +36,7 @@ export default function QuestionForm() {
               Question Title <span className="text-primary-500">*</span>
             </FieldLabel>
 
+            {/* {...field} wires value/onChange/onBlur/ref straight into the input */}
             <Input
               {...field}
               id={field.name}
@@ -42,11 +47,14 @@ export default function QuestionForm() {
             <FieldDescription className="body-regular text-light-500 mt-2.5">
               Be specific and imagine you&apos;re asking a question to another person.
             </FieldDescription>
+
+            {/* Only shows up if this field failed Zod validation */}
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
         )}
       />
 
+      {/* CONTENT FIELD — same pattern as title; will later become a rich-text editor */}
       <Controller
         control={form.control}
         name="content"
@@ -71,6 +79,7 @@ export default function QuestionForm() {
         )}
       />
 
+      {/* TAGS FIELD — an array, not a plain string, so it needs custom add/remove logic */}
       <Controller
         control={form.control}
         name="tags"
@@ -80,20 +89,24 @@ export default function QuestionForm() {
               Tags <span className="text-primary-500">*</span>
             </FieldLabel>
             <div>
+              {/* This input is NOT bound to field.value directly — it's just for typing a new tag */}
               <Input
                 placeholder="Add tags..."
                 className="paragraph-regular background-light700_dark300 light-border-2 text-dark300_light700 no-focus min-h-[56px] border"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
-                    e.preventDefault();
+                    e.preventDefault(); // stop Enter from submitting the whole form
                     const value = e.currentTarget.value.trim();
+                    // only add if: not empty, under 3 tags, not a duplicate
                     if (value && field.value.length < 3 && !field.value.includes(value)) {
-                      field.onChange([...field.value, value]);
-                      e.currentTarget.value = "";
+                      field.onChange([...field.value, value]); // add tag to the array
+                      e.currentTarget.value = ""; // clear the input box
                     }
                   }
                 }}
               />
+
+              {/* Render each current tag as a removable pill */}
               <div className="mt-2.5 flex flex-wrap gap-2.5">
                 {field.value.map((tag: string) => (
                   <div
@@ -102,8 +115,8 @@ export default function QuestionForm() {
                   >
                     {tag}
                     <button
-                      type="button"
-                      onClick={() => field.onChange(field.value.filter((t: string) => t !== tag))}
+                      type="button" // prevents this button from submitting the form
+                      onClick={() => field.onChange(field.value.filter((t: string) => t !== tag))} // remove this one tag
                       className="cursor-pointer"
                     >
                       ✕
@@ -119,6 +132,8 @@ export default function QuestionForm() {
           </Field>
         )}
       />
+
+      {/* SUBMIT BUTTON — right-aligned, width fits its text */}
       <div className="mt-16 flex justify-end">
         <Button type="submit" className="primary-gradient !text-light-900 w-fit">
           Ask A Question
