@@ -1,14 +1,20 @@
 "use client";
 
 import { Controller, useForm } from "react-hook-form";
+import { useRef } from "react";
+import dynamic from "next/dynamic";
 import { AskQuestionSchema } from "@/lib/validations";
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
 import z from "zod";
 import { Field, FieldLabel, FieldDescription, FieldError } from "../ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
+import type { MDXEditorMethods } from "@mdxeditor/editor";
+
+const Editor = dynamic(() => import("../editor"), { ssr: false });
 
 export default function QuestionForm() {
+  const editorRef = useRef<MDXEditorMethods>(null); // for controlling the editor imperatively
   // Set up the form: validated against AskQuestionSchema, starting with empty fields
   const form = useForm<z.infer<typeof AskQuestionSchema>>({
     resolver: standardSchemaResolver(AskQuestionSchema),
@@ -64,12 +70,7 @@ export default function QuestionForm() {
               Detailed explanation of your problem <span className="text-primary-500">*</span>
             </FieldLabel>
 
-            <Input
-              {...field}
-              id={field.name}
-              aria-invalid={fieldState.invalid}
-              className="paragraph-regular background-light700_dark300 light-border-2 text-dark300_light700 no-focus min-h-[56px] border"
-            />
+            <Editor markdown={field.value} editorRef={editorRef} onChange={field.onChange} />
 
             <FieldDescription className="body-regular text-light-500 mt-2.5">
               Introduce the problem and expand on what you&apos;ve put in the title.
