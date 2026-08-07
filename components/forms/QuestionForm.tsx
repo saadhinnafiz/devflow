@@ -96,12 +96,16 @@ export default function QuestionForm() {
                 className="paragraph-regular background-light700_dark300 light-border-2 text-dark300_light700 no-focus min-h-[56px] border"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
-                    e.preventDefault(); // stop Enter from submitting the whole form
+                    e.preventDefault();
                     const value = e.currentTarget.value.trim();
-                    // only add if: not empty, under 3 tags, not a duplicate
                     if (value && field.value.length < 3 && !field.value.includes(value)) {
-                      field.onChange([...field.value, value]); // add tag to the array
-                      e.currentTarget.value = ""; // clear the input box
+                      field.onChange([...field.value, value]);
+                      e.currentTarget.value = "";
+                      form.clearErrors("tags");
+                    } else if (field.value.length >= 3) {
+                      form.setError("tags", { type: "manual", message: "You can add up to 3 tags only" });
+                    } else if (field.value.includes(value)) {
+                      form.setError("tags", { type: "manual", message: "Tag already exists" });
                     }
                   }
                 }}
