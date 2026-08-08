@@ -9,6 +9,7 @@ import z from "zod";
 import { Field, FieldLabel, FieldDescription, FieldError } from "../ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
+import TagCards from "../cards/TagCards";
 import type { MDXEditorMethods } from "@mdxeditor/editor";
 
 const Editor = dynamic(() => import("../editor"), { ssr: false });
@@ -98,12 +99,12 @@ export default function QuestionForm() {
                   if (e.key === "Enter") {
                     e.preventDefault();
                     const value = e.currentTarget.value.trim();
-                    if (value && field.value.length < 3 && !field.value.includes(value)) {
+                    if (value && field.value.length < 5 && !field.value.includes(value)) {
                       field.onChange([...field.value, value]);
                       e.currentTarget.value = "";
                       form.clearErrors("tags");
-                    } else if (field.value.length >= 3) {
-                      form.setError("tags", { type: "manual", message: "You can add up to 3 tags only" });
+                    } else if (field.value.length >= 5) {
+                      form.setError("tags", { type: "manual", message: "You can add up to 5 tags only" });
                     } else if (field.value.includes(value)) {
                       form.setError("tags", { type: "manual", message: "Tag already exists" });
                     }
@@ -111,27 +112,25 @@ export default function QuestionForm() {
                 }}
               />
 
-              {/* Render each current tag as a removable pill */}
-              <div className="mt-2.5 flex flex-wrap gap-2.5">
-                {field.value.map((tag: string) => (
-                  <div
-                    key={tag}
-                    className="bg-light-800 dark:bg-dark-300 flex items-center gap-2 rounded-md px-3 py-1.5 text-sm"
-                  >
-                    {tag}
-                    <button
-                      type="button" // prevents this button from submitting the form
-                      onClick={() => field.onChange(field.value.filter((t: string) => t !== tag))} // remove this one tag
-                      className="cursor-pointer"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ))}
-              </div>
+              {/* Render each current tag as a removable pill, reusing TagCards */}
+              {field.value.length > 0 && (
+                <div className="mt-2.5 flex flex-wrap gap-2.5">
+                  {field.value.map((tag: string) => (
+                    <TagCards
+                      key={tag}
+                      _id={tag}
+                      name={tag}
+                      compact
+                      remove
+                      isButton
+                      handleRemove={() => field.onChange(field.value.filter((t: string) => t !== tag))}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
             <FieldDescription className="body-regular text-light-500 mt-2.5">
-              Add up to 3 tags to describe what your question is about. You need to press enter to add a tag.
+              Add up to 5 tags to describe what your question is about. You need to press enter to add a tag.
             </FieldDescription>
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
