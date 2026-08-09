@@ -15,8 +15,8 @@ import type { MDXEditorMethods } from "@mdxeditor/editor";
 const Editor = dynamic(() => import("../editor"), { ssr: false });
 
 export default function QuestionForm() {
-  const editorRef = useRef<MDXEditorMethods>(null); // for controlling the editor imperatively
-  // Set up the form: validated against AskQuestionSchema, starting with empty fields
+  const editorRef = useRef<MDXEditorMethods>(null);
+
   const form = useForm<z.infer<typeof AskQuestionSchema>>({
     resolver: standardSchemaResolver(AskQuestionSchema),
     defaultValues: {
@@ -26,14 +26,12 @@ export default function QuestionForm() {
     },
   });
 
-  // Runs only after validation passes — for now, just logs the result
   const handleCreateQuestion = (data: z.infer<typeof AskQuestionSchema>) => {
     console.log(data);
   };
 
   return (
     <form onSubmit={form.handleSubmit(handleCreateQuestion)} className="flex w-full flex-col gap-10">
-      {/* TITLE FIELD */}
       <Controller
         control={form.control}
         name="title"
@@ -42,26 +40,20 @@ export default function QuestionForm() {
             <FieldLabel htmlFor={field.name} className="paragraph-semibold text-dark400_light800">
               Question Title <span className="text-primary-500">*</span>
             </FieldLabel>
-
-            {/* {...field} wires value/onChange/onBlur/ref straight into the input */}
             <Input
               {...field}
               id={field.name}
               aria-invalid={fieldState.invalid}
               className="paragraph-regular background-light700_dark300 light-border-2 text-dark300_light700 no-focus min-h-[56px] border"
             />
-
             <FieldDescription className="body-regular text-light-500 mt-2.5">
               Be specific and imagine you&apos;re asking a question to another person.
             </FieldDescription>
-
-            {/* Only shows up if this field failed Zod validation */}
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
         )}
       />
 
-      {/* CONTENT FIELD — same pattern as title; will later become a rich-text editor */}
       <Controller
         control={form.control}
         name="content"
@@ -70,9 +62,7 @@ export default function QuestionForm() {
             <FieldLabel htmlFor={field.name} className="paragraph-semibold text-dark400_light800">
               Detailed explanation of your problem <span className="text-primary-500">*</span>
             </FieldLabel>
-
             <Editor markdown={field.value} editorRef={editorRef} onChange={field.onChange} />
-
             <FieldDescription className="body-regular text-light-500 mt-2.5">
               Introduce the problem and expand on what you&apos;ve put in the title.
             </FieldDescription>
@@ -81,7 +71,6 @@ export default function QuestionForm() {
         )}
       />
 
-      {/* TAGS FIELD — an array, not a plain string, so it needs custom add/remove logic */}
       <Controller
         control={form.control}
         name="tags"
@@ -91,7 +80,6 @@ export default function QuestionForm() {
               Tags <span className="text-primary-500">*</span>
             </FieldLabel>
             <div>
-              {/* This input is NOT bound to field.value directly — it's just for typing a new tag */}
               <Input
                 placeholder="Add tags..."
                 className="paragraph-regular background-light700_dark300 light-border-2 text-dark300_light700 no-focus min-h-[56px] border"
@@ -99,20 +87,22 @@ export default function QuestionForm() {
                   if (e.key === "Enter") {
                     e.preventDefault();
                     const value = e.currentTarget.value.trim();
-                    if (value && field.value.length < 5 && !field.value.includes(value)) {
+                    const normalizedValue = value.toLowerCase();
+                    const normalizedTags = field.value.map((t: string) => t.toLowerCase());
+
+                    if (value && field.value.length < 5 && !normalizedTags.includes(normalizedValue)) {
                       field.onChange([...field.value, value]);
                       e.currentTarget.value = "";
                       form.clearErrors("tags");
                     } else if (field.value.length >= 5) {
                       form.setError("tags", { type: "manual", message: "You can add up to 5 tags only" });
-                    } else if (field.value.includes(value)) {
+                    } else if (normalizedTags.includes(normalizedValue)) {
                       form.setError("tags", { type: "manual", message: "Tag already exists" });
                     }
                   }
                 }}
               />
 
-              {/* Render each current tag as a removable pill, reusing TagCards */}
               {field.value.length > 0 && (
                 <div className="mt-2.5 flex flex-wrap gap-2.5">
                   {field.value.map((tag: string) => (
@@ -137,7 +127,6 @@ export default function QuestionForm() {
         )}
       />
 
-      {/* SUBMIT BUTTON — right-aligned, width fits its text */}
       <div className="mt-16 flex justify-end">
         <Button type="submit" className="primary-gradient !text-light-900 w-fit">
           Ask A Question
