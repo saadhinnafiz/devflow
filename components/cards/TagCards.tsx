@@ -18,7 +18,7 @@ interface Props {
 export default function TagCards({ _id, name, questions, showCount, compact, remove, isButton, handleRemove }: Props) {
   const iconClass = getDeviconClassname(name);
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = (e: React.MouseEvent): void => {
     e.preventDefault();
   };
 
