@@ -6,9 +6,9 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { SheetClose } from "@/components/ui/sheet";
-import React from "react";
+import { ReactElement } from "react";
 
-export default function NavigationLinks({ isMobileNav = false }: { isMobileNav?: boolean }) {
+export default function NavigationLinks({ isMobileNav = false }: { isMobileNav?: boolean }): ReactElement {
   const pathname = usePathname();
   //TODO: REMOVE Dummy ID below and replace with actual user ID.
   const userId = "123";
@@ -45,7 +45,7 @@ export default function NavigationLinks({ isMobileNav = false }: { isMobileNav?:
         return isMobileNav ? (
           <SheetClose key={item.route} nativeButton={false} render={LinkComponent} />
         ) : (
-          <React.Fragment key={item.route}>{LinkComponent} </React.Fragment>
+          LinkComponent
         );
       })}
     </>
