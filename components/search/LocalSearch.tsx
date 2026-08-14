@@ -5,6 +5,7 @@ import { Input } from "../ui/input";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { formUrlQuery, removeKeysFromQuery } from "@/lib/url";
+import { ReactElement } from "react";
 
 interface Props {
   route: string;
@@ -13,7 +14,7 @@ interface Props {
   otherClasses?: string;
 }
 
-export default function LocalSearch({ route, imgSrc, placeholder, otherClasses }: Props) {
+export default function LocalSearch({ route, imgSrc, placeholder, otherClasses }: Props): ReactElement {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
