@@ -3,6 +3,7 @@ import Link from "next/link";
 import ROUTES from "@/constants/routes";
 import { getDeviconClassname } from "@/lib/utils";
 import { Badge } from "../ui/badge";
+import { ReactElement } from "react";
 
 interface Props {
   _id: string;
@@ -15,8 +16,17 @@ interface Props {
   handleRemove?: () => void;
 }
 
-export default function TagCards({ _id, name, questions, showCount, compact, remove, isButton, handleRemove }: Props) {
-  const iconClass = getDeviconClassname(name);
+export default function TagCards({
+  _id,
+  name,
+  questions,
+  showCount,
+  compact,
+  remove,
+  isButton,
+  handleRemove,
+}: Props): ReactElement {
+  const iconClass: string = getDeviconClassname(name);
 
   const handleClick = (e: React.MouseEvent): void => {
     e.preventDefault();
