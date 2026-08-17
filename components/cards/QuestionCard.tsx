@@ -3,13 +3,15 @@ import { getTimeStamp } from "@/lib/utils";
 import Link from "next/link";
 import TagCards from "./TagCards";
 import Metrics from "../Metric";
+import { ReactElement } from "react";
 
 interface Props {
   question: Question;
 }
+
 export default function QuestionCard({
   question: { _id, title, tags, author, upvotes, answers, views, createdAt },
-}: Props) {
+}: Props): ReactElement {
   return (
     <div className="card-wrapper rounded-[10px] p-9 sm:px-11">
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
