@@ -4,8 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import NavigationLinks from "./navbar/NavigationLinks";
 import { auth, signOut } from "@/auth";
+import { ReactElement } from "react";
 
-export default async function LeftSidebar() {
+export default async function LeftSidebar(): Promise<ReactElement> {
   const session = await auth();
   const userId = session?.user?.id;
 
