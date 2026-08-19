@@ -6,8 +6,9 @@ import ROUTES from "@/constants/routes";
 import { Button } from "@/components/ui/button";
 import NavigationLinks from "./NavigationLinks";
 import { auth, signOut } from "@/auth";
+import { ReactElement } from "react";
 
-export default async function MobileNavigation() {
+export default async function MobileNavigation(): Promise<ReactElement> {
   const session = await auth();
   const userId = session?.user?.id;
 
